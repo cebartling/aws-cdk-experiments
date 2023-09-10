@@ -7,7 +7,9 @@ import {AttributeType, BillingMode, Table, TableClass} from "aws-cdk-lib/aws-dyn
 import {Construct} from 'constructs';
 import {readFileSync} from "fs";
 
-export class GraphqlApiStack extends Stack {
+export class AppSyncStack extends Stack {
+
+  private readonly _api: CfnGraphQLApi
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -47,18 +49,18 @@ export class GraphqlApiStack extends Stack {
     });
 
     // Add AppSync GraphQL API, generate an API key for use and a schema
-    const api = new CfnGraphQLApi(this, "graphql-api-id", {
+    this._api = new CfnGraphQLApi(this, "graphql-api-id", {
       name: "graphql-api-name",
       authenticationType: "API_KEY",
       xrayEnabled: true
     });
 
     const apiKey = new CfnApiKey(this, 'graphql-api-key', {
-      apiId: api.attrApiId,
+      apiId: this._api.attrApiId,
     });
 
     const schema = new CfnGraphQLSchema(this, "graphql-api-schema", {
-      apiId: api.attrApiId,
+      apiId: this._api.attrApiId,
       definition: readFileSync("./graphql/schema.graphql").toString(),
     });
 
@@ -75,7 +77,7 @@ export class GraphqlApiStack extends Stack {
     });
 
     const messagesDataSource = new CfnDataSource(this, "messages-datasource", {
-      apiId: api.attrApiId,
+      apiId: this._api.attrApiId,
       // Note: property 'name' cannot include hyphens
       name: "MessagesDataSource",
       type: "AWS_LAMBDA",
@@ -86,21 +88,21 @@ export class GraphqlApiStack extends Stack {
     });
 
     const messagesResolver = new CfnResolver(this, "messages-resolver", {
-      apiId: api.attrApiId,
+      apiId: this._api.attrApiId,
       typeName: "Query",
       fieldName: "messages",
       dataSourceName: messagesDataSource.name,
     });
 
     const welcomeMessageResolver = new CfnResolver(this, "welcomeMessage-resolver", {
-      apiId: api.attrApiId,
+      apiId: this._api.attrApiId,
       typeName: "MessageQuery",
       fieldName: "welcomeMessage",
       dataSourceName: messagesDataSource.name,
     });
 
     const farewellMessageResolver = new CfnResolver(this, "farewellMessage-resolver", {
-      apiId: api.attrApiId,
+      apiId: this._api.attrApiId,
       typeName: "MessageQuery",
       fieldName: "farewellMessage",
       dataSourceName: messagesDataSource.name,
@@ -117,5 +119,10 @@ export class GraphqlApiStack extends Stack {
       resources: [messagesLambdaFunction.functionArn],
       actions: ["lambda:InvokeFunction"]
     }));
+  }
+
+
+  get api(): CfnGraphQLApi {
+    return this._api;
   }
 }
