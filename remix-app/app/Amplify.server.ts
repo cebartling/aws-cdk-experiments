@@ -1,14 +1,13 @@
 import { Amplify, Auth } from 'aws-amplify';
-import * as process from "process";
 
-Amplify.configure({
+export const amplifyAuthOptions = Amplify.configure({
   Auth: {
     region: process.env.AWS_REGION,
     userPoolId: process.env.AWS_USER_POOL_ID,
     userPoolWebClientId: process.env.AWS_USER_POOL_CLIENT_ID,
     // OPTIONAL - This is used when autoSignIn is enabled for Auth.signUp
     // 'code' is used for Auth.confirmSignUp, 'link' is used for email link verification
-    signUpVerificationMethod: 'code', // 'code' | 'link'
+    // signUpVerificationMethod: 'code', // 'code' | 'link'
 
     // OPTIONAL - Configuration for cookie storage
     // Note: if the secure flag is set to true, then the cookie transmission requires a secure protocol
@@ -30,7 +29,7 @@ Amplify.configure({
     // storage: MyStorage,
 
     // OPTIONAL - Manually set the authentication flow type. Default is 'USER_SRP_AUTH'
-    authenticationFlowType: 'USER_PASSWORD_AUTH',
+    // authenticationFlowType: 'USER_PASSWORD_AUTH',
 
     // OPTIONAL - Manually set key value pairs that can be passed to Cognito Lambda Triggers
     // clientMetadata: {myCustomKey: 'myCustomValue'},
@@ -52,6 +51,13 @@ Amplify.configure({
   },
 });
 
-
 // You can get the current config object
-export const amplifyAuthOptions = Auth.configure();
+// export const amplifyAuthOptions = Auth.configure();
+
+export async function signIn(username: string, password: string): Promise<any> {
+  return Auth.signIn(username, password);
+}
+
+export async function signOut(): Promise<any> {
+  return Auth.signOut();
+}
