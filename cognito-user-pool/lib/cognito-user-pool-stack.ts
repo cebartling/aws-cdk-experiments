@@ -55,13 +55,16 @@ export class CognitoUserPoolStack extends cdk.Stack {
       },
       accountRecovery: cognito.AccountRecovery.EMAIL_ONLY,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
-    });
+    } as cognito.UserPoolProps);
 
     const appClient = userpool.addClient('experiment-app-client', {
       userPoolClientName: 'experiment-app-client',
       authFlows: {
+        adminUserPassword: false,
+        custom: false,
         userPassword: true,
-      },
-    });
+        userSrp: false,
+      } as cognito.AuthFlow,
+    } as cognito.UserPoolClientOptions);
   }
 }

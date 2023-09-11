@@ -6,7 +6,7 @@ import type {
 } from '@remix-run/node';
 import { json, redirect } from '@remix-run/router';
 import { Form } from '@remix-run/react';
-import { signIn } from '~/Amplify.server';
+import { logger, signIn } from '~/Amplify.server';
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -24,6 +24,8 @@ export const action: ActionFunction = async ({ request }: DataFunctionArgs) => {
     const formData = await request.formData();
     const username = formData.get('email') as string;
     const password = formData.get('password') as string;
+    console.info('username', username);
+    console.info('password', password);
     const user = await signIn(username, password);
     console.info('user', JSON.stringify(user, null, 2));
     return redirect('/protected', {

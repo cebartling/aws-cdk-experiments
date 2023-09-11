@@ -1,7 +1,7 @@
 import { Amplify, Auth, Hub, Logger } from 'aws-amplify';
 import { HubCallback, HubCapsule } from '@aws-amplify/core';
 
-const logger = new Logger('My-Logger');
+export const logger = new Logger('AmplifyLogger');
 
 const listener: HubCallback = (data: HubCapsule) => {
   switch (data?.payload?.event) {
@@ -113,37 +113,13 @@ export const amplifyAuthOptions = Amplify.configure({
       sameSite: 'lax',
       // OPTIONAL - Cookie secure flag
       // Either true or false, indicating if the cookie transmission requires a secure protocol (https).
-      secure: true,
+      secure: false,
     },
-
-    // OPTIONAL - customized storage object
-    // storage: MyStorage,
 
     // OPTIONAL - Manually set the authentication flow type. Default is 'USER_SRP_AUTH'
     authenticationFlowType: 'USER_PASSWORD_AUTH',
-
-    // OPTIONAL - Manually set key value pairs that can be passed to Cognito Lambda Triggers
-    // clientMetadata: {myCustomKey: 'myCustomValue'},
-
-    // OPTIONAL - Hosted UI configuration
-    // oauth: {
-    //   domain: 'your_cognito_domain',
-    //   scope: [
-    //     'phone',
-    //     'email',
-    //     'profile',
-    //     'openid',
-    //     'aws.cognito.signin.user.admin',
-    //   ],
-    //   redirectSignIn: 'http://localhost:3000/',
-    //   redirectSignOut: 'http://localhost:3000/',
-    //   responseType: 'code', // or 'token', note that REFRESH token will only be generated when the responseType is code
-    // },
   },
 });
-
-// You can get the current config object
-// export const amplifyAuthOptions = Auth.configure();
 
 export async function signIn(username: string, password: string): Promise<any> {
   return Auth.signIn(username, password);
