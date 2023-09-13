@@ -2,3 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+    .btn {
+        @apply bg-blue-500 text-white font-bold py-2 px-4 my-6 rounded-md leading-5 hover:bg-blue-800 disabled:bg-neutral-200;
+    }
+
+    .input-field {
+        @apply rounded-[10px] block px-3 py-2 bg-white border border-gray-300 text-sm placeholder-slate-400 shadow-[0_0_20px_rgba(0,0,0,0.1)] focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none;
+    }
+
+    .error-alert {
+        @apply w-[600px] bg-red-100 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md;
+        border-top: 5px solid;
+    }
+
+    .success-alert {
+        @apply w-[600px] bg-teal-100 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md;
+        border-top: 5px solid;
+    }
+}

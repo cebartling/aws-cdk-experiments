@@ -6,7 +6,7 @@ import type {
 } from '@remix-run/node';
 import { json, redirect } from '@remix-run/router';
 import { Form } from '@remix-run/react';
-import { logger, signIn } from '~/Amplify.server';
+import { signIn } from '~/aws-cognito.server';
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -26,12 +26,12 @@ export const action: ActionFunction = async ({ request }: DataFunctionArgs) => {
     const password = formData.get('password') as string;
     console.info('username', username);
     console.info('password', password);
-    const user = await signIn(username, password);
-    console.info('user', JSON.stringify(user, null, 2));
+    const output = await signIn(username, password);
+    console.info('Command output', JSON.stringify(output, null, 2));
     return redirect('/protected', {
-      headers: {
-        'Set-Cookie': `session=${user.signInUserSession.accessToken.jwtToken}; Max-Age=86400; Path=/; HttpOnly`,
-      },
+      // headers: {
+      //   'Set-Cookie': `session=${user.signInUserSession.accessToken.jwtToken}; Max-Age=86400; Path=/; HttpOnly`,
+      // },
     });
   } catch (error) {
     console.error(error);
@@ -49,7 +49,12 @@ export default function SignIn() {
             <label htmlFor="email" className="font-bold text-lg">
               Email
             </label>
-            <input type="email" id="email" name="email" className="text-lg" />
+            <input
+              type="email"
+              id="email"
+              name="email"
+              className="input-field"
+            />
           </div>
           <div className="flex p-4">
             <label htmlFor="password" className="font-bold text-lg">
@@ -59,11 +64,11 @@ export default function SignIn() {
               type="password"
               id="password"
               name="password"
-              className="text-lg"
+              className="input-field"
             />
           </div>
           <div>
-            <button type="submit" role="button">
+            <button type="submit" role="button" className="btn">
               Sign In
             </button>
           </div>
