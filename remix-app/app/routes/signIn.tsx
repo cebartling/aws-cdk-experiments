@@ -2,13 +2,13 @@ import type {
   ActionFunction,
   DataFunctionArgs,
   LoaderFunction,
-  V2_MetaFunction,
+  MetaFunction,
 } from '@remix-run/node';
 import { json, redirect } from '@remix-run/router';
 import { Form } from '@remix-run/react';
-import { signIn } from '~/aws-cognito.server';
+import { signIn } from '~/services/aws-cognito.server';
 
-export const meta: V2_MetaFunction = () => {
+export const meta: MetaFunction = () => {
   return [
     { title: 'Remix/AWS Amplify' },
     { name: 'description', content: 'Welcome to Remix/AWS Amplify!' },

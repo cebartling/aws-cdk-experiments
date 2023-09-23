@@ -1,11 +1,11 @@
 import type {
   DataFunctionArgs,
   LoaderFunction,
-  V2_MetaFunction,
+  MetaFunction,
 } from '@remix-run/node';
 import { json } from '@remix-run/router';
 
-export const meta: V2_MetaFunction = () => {
+export const meta: MetaFunction = () => {
   return [
     { title: 'Remix/AWS Amplify' },
     { name: 'description', content: 'Welcome to Remix/AWS Amplify!' },
