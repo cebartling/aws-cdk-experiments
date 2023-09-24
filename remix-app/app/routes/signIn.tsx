@@ -5,8 +5,9 @@ import type {
   MetaFunction,
 } from '@remix-run/node';
 import { json, redirect } from '@remix-run/router';
-import { Form } from '@remix-run/react';
+import { Form, useLoaderData } from '@remix-run/react';
 import { signIn } from '~/services/aws-cognito.server';
+import { getCallerIdentity } from '~/services/aws-sts.server';
 
 export const meta: MetaFunction = () => {
   return [
@@ -16,7 +17,10 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
-  return json({});
+  const callerIdentityOutput = await getCallerIdentity();
+  return json({
+    callerIdentityOutput,
+  });
 };
 
 export const action: ActionFunction = async ({ request }: DataFunctionArgs) => {
@@ -40,9 +44,11 @@ export const action: ActionFunction = async ({ request }: DataFunctionArgs) => {
 };
 
 export default function SignIn() {
+  const { callerIdentityOutput } = useLoaderData();
   return (
     <div>
       <h1 className="text-3xl font-bold">Sign In</h1>
+      <div className="">{JSON.stringify(callerIdentityOutput, null, 2)}</div>
       <Form method="POST">
         <div className="flex flex-col p-4">
           <div className="flex p-4">
