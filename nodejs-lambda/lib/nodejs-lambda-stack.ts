@@ -11,11 +11,11 @@ export class NodejsLambdaStack extends cdk.Stack {
     super(scope, id, props);
 
     const lambdaFunction = new NodejsFunction(this, 'NodejsFunction', {
-      entry: 'src/lambda/index.ts',
+      entry: 'src/lambda/HelloWorld.ts',
       handler: 'handler',
       runtime: Runtime.NODEJS_18_X,
       bundling: {
-        externalModules: ['@aws-sdk/'],
+        externalModules: ['@aws-sdk/*'],
         minify: true,
         sourceMap: true,
       } as NodejsFunctionProps['bundling'],
