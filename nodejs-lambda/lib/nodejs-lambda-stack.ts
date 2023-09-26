@@ -4,7 +4,7 @@ import { NodejsFunction, NodejsFunctionProps } from 'aws-cdk-lib/aws-lambda-node
 import { CfnOutput } from 'aws-cdk-lib';
 import { LambdaRestApi } from 'aws-cdk-lib/aws-apigateway';
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
-import { Runtime } from 'aws-cdk-lib/aws-lambda';
+import { Runtime, Tracing } from 'aws-cdk-lib/aws-lambda';
 
 export class NodejsLambdaStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -15,14 +15,17 @@ export class NodejsLambdaStack extends cdk.Stack {
       handler: 'handler',
       runtime: Runtime.NODEJS_18_X,
       bundling: {
-        minify: true,
         externalModules: ['@aws-sdk/'],
+        minify: true,
+        sourceMap: true,
       } as NodejsFunctionProps['bundling'],
       environment: {
-        Powertools_SERVICE_NAME: 'helloWorld',
+        POWERTOOLS_SERVICE_NAME: 'helloWorld',
         LOG_LEVEL: 'INFO',
+        NODE_OPTIONS: '--enable-source-maps',
       },
       logRetention: RetentionDays.ONE_WEEK,
+      tracing: Tracing.ACTIVE,
     } as NodejsFunctionProps);
 
     const api = new LambdaRestApi(this, 'apigw', {
