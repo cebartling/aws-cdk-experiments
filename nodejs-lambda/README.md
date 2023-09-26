@@ -35,3 +35,8 @@ curl [LAMBDA_URL]
 sam logs --stack-name NodejsLambdaStack
 ```
 
+
+```shell
+sam traces
+```
+
